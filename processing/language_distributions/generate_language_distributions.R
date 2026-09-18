@@ -26,7 +26,7 @@ Desc(df_songs_langs$glot_lyrics_conf) # somewhat longer tail
 df_songs_langs = df_songs_langs %>%
   mutate(agreement = ifelse(ft_lyrics_lang == glot_lyrics_lang, TRUE, FALSE))
 
-table(df_songs_langs$agreement) / nrow(df_songs_langs) # 71% of cases they agree
+table(df_songs_langs$agreement) / nrow(df_songs_langs) # 70.6% of cases they agree
 
 
 # use cases where Fasttext is very certain, i.e., FT > 0.75; i.e., we are here quite certain what the language is. However, FT is not good at detecting smaller varieties. So if FT hestites but GlotLID is more certain, we use glotLID
@@ -95,7 +95,8 @@ df_streams %>%
   ggplot(aes(geometry = geometry, fill = streams_with_lang_perc)) + 
   geom_sf() + 
   labs(title = "percent of streams with lyrics")
-# western industrialized countries tends to have lyrics # or because text processing is designed
+
+# western industrialized countries tends to have lyrics or because text processing is designed
 # for latin scripts
 
 
@@ -116,7 +117,6 @@ country_year_coverage = df_streams %>%
 
 ggplotly(country_year_coverage)
 
-# no sudden outlier spikes; non europe fall over time
 
 # replace NA with unknown
 df_streams = df_streams %>%
@@ -127,44 +127,5 @@ country_year_lang = df_streams %>%
   group_by(country_code, year, ISO6393) %>%
   summarize(streams = sum(streams))
 
-
-# validate odd language labels #####
-
-# add streams to song
-lyrics_streams_langs = df_songs_langs_filtered %>%
-  left_join(df_streams %>%
-              group_by(artist,title) %>%
-              summarize(streams = sum(streams)))
-
-# what language are the most rare?
-lyrics_streams_langs %>%
-  group_by(ISO6393) %>%
-  summarize(streams = sum(streams)) %>%
-  arrange(streams)
-
-lyrics_streams_langs %>%
-  filter(ISO6393 == "anp") %>%
-  View()
-
-# ltz --> luxemburgish; checks out
-# sna --> shona; checks out
-# ckm --> chakavian; is realy alabanian
-# oci --> ocitanean; is really Spanish
-# mkd --> Macedonian; checks out
-# kin --> Kinyarwanda; short one or two word lyrics --> remove
-# anp --> angika; is really a greek song
-# 
-
-
-## try more agressive lyrics matching
-
 # write final df
 write_csv(country_year_lang, "data/final_dataset/country_year_lang_streams.csv")
-
-
-df_streams %>%
-  filter(ISO6393 == "unknown") %>%
-  group_by(artist, title) %>%
-  summarize(streams = sum(streams)) %>%
-  View()
-
