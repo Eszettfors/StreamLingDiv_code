@@ -8,7 +8,7 @@ The rise of streaming services such as spotify have made music consumption digit
 
 
 # Pipeline
-To replicate the dataset construction, put the MGD+ and Lyrics data in raw. Then, run ´processing/database_processing/fetch_asjp.R and `../fetch_glottolog.R`. This downloads the linguistic databases from the CLLD.
+To replicate the dataset construction, put the MGD+ and Lyrics data in raw. Then, run ´processing/database_processing/fetch_asjp.R` and `../fetch_glottolog.R`. This downloads the linguistic databases from the CLLD.
 
 Then, run `processing/language_distributions/structure_raw_data.R`, to take the MGD stream data and create a .csv with the number of streams of a given artist and title combination in a specific country and year, and a .csv with the unique artist and title (i.e., songs) in the data. These are located in `data/processed/`.
 
